@@ -1,33 +1,28 @@
 # coderhouse-nodejs-api
 
-## Endpoints Products
+### Endpoints Products
 
-### query params availables
+- GET /api/products
+- GET /api/products/:id
+- POST /api/products
+- PUT /api/products/:id
+- DELETE /api/products/:id
 
-sort =  asc | desc
-limit = number
-page = number
-category = string
+### Query params availables
 
-### GET /api/products
+- sort =  asc | desc
+- limit = number
+- page = number
+- category = string
 
-All products
+### Endpoints Carts
 
-### GET /api/products/:id
-
-Product by id
-
-### POST /api/products
-
-Add a new product
-
-### PUT /api/products/:id
-
-Update a product by id
-
-### DELETE /api/products/:id
-
-Delete a product by id
+- POST /api/carts
+- GET /api/carts/:cid
+- POST /api/carts/:cid/products/:pid
+- PUT /api/carts/:cid/products/:pid
+- DELETE /api/carts/:id
+- DELETE /api/carts/:cid/products/:pid
 
 ### Install
 
