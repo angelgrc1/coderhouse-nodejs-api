@@ -18,7 +18,10 @@
   },
   "homepage": "https://github.com/angelgrc1/coderhouse-nodejs-api#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.1",
+    "mongoose-paginate-v2": "^1.7.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.21"
