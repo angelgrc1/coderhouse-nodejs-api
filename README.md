@@ -24,6 +24,11 @@
 - DELETE /api/carts/:id
 - DELETE /api/carts/:cid/products/:pid
 
+### Endpoints Sessions
+
+- POST /api/session/register
+- POST /api/session/login
+
 ### Install
 
 ```bash
