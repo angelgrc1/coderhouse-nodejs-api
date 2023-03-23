@@ -1,6 +1,7 @@
 const express = require("express");
+const passport = require("passport");
 const usersSchema = require("../models/users.schema");
-const { isValidPassword, createHash } = require("../utils/password");
+const { isValidPassword } = require("../utils/password");
 
 const sessionRouter = express.Router();
 
@@ -44,5 +45,33 @@ sessionRouter.post("/login", (req, res) => {
       res.status(500).json(err);
     });
 });
+
+// auth with github
+
+sessionRouter.get(
+  "/github",
+  passport.authenticate("github", { scope: ["user:email"] })
+);
+
+sessionRouter.get(
+  "/github/callback",
+  passport.authenticate("github", { failureRedirect: "/login" }),
+  function (req, res) {
+    // Successful authentication, redirect dashboard.
+    res.redirect("/dashboard");
+  }
+);
+
+// logout
+
+sessionRouter.get('/logout', function(req, res) {
+  req.logout(function(err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect('/');
+  });
+});
+
 
 module.exports = sessionRouter;
