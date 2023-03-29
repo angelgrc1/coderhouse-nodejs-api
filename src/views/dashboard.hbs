@@ -3,23 +3,18 @@
 >
   <header class="mb-auto">
     <div>
-      <h3 class="float-md-start mb-0">NodeJS API</h3>
+      <h3 class="float-md-start mb-0">NodeJS API - DASHBOARD</h3>
     </div>
   </header>
 
-  <main class="px- d-flex justify-content-center gap-3">
+  <main class="w-100 d-flex flex-column justify-content-center gap-3">
     <p class="lead">
-      <a
-        href="/login"
-        class="btn btn-lg btn-light fw-bold border-white bg-white"
-      >Login</a>
+      Estas logueado
+      <span class="text-primary">¡bienvenido!</span>
     </p>
-    <p class="lead">
-      <a
-        href="/register"
-        class="btn btn-lg btn-light fw-bold border-white bg-white"
-      >Register</a>
-    </p>
+    <div class="container-sm">
+      <a href="/api/session/logout" class="btn btn-lg btn-primary">Logout</a>
+    </div>
   </main>
 
   <footer class="mt-auto bg-dark text-white-50">
@@ -31,4 +26,5 @@
       </div>
     </div>
   </footer>
+
 </div>

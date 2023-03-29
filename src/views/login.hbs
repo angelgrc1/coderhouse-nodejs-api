@@ -20,10 +20,25 @@
       />
       <label for="login-password">Password</label>
     </div>
-
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+    <button class="w-100 mb-3 btn btn-lg btn-primary" type="submit">Sign in</button>
     <p id="error" class="text-danger"></p>
   </form>
+  <a
+    href="/api/session/github"
+    class="w-100 btn btn-lg bg-black text-bg-dark"
+    type="submit"
+  >
+    <div class="d-flex justify-content-center align-items-center gap-3">
+      <span>Sign in with Github</span>
+      <img
+        src="https://avatars.githubusercontent.com/u/1165625?v=4"
+        class="rounded-circle ml-3"
+        alt="..."
+        width="30"
+        height="30"
+      />
+    </div>
+  </a>
 </main>
 
 <script src="/js/login.js"></script>
