@@ -1,3 +1,4 @@
+const config = require("./config/config");
 const express = require("express");
 const session = require("express-session");
 const mongoose = require("mongoose");
@@ -8,7 +9,7 @@ const passport = require("passport");
 const isAuth = require("./middlewares/isAuth.midleware");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = config.port;
 
 // view engine setup
 
@@ -26,7 +27,7 @@ app.set("views", `${__dirname}/views`);
 // middleware
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: config.sessionSecret,
     resave: false,
     saveUninitialized: false,
     cookie: { httpOnly: true, secure: false, maxAge: 24 * 60 * 60 * 1000 },
@@ -61,7 +62,7 @@ app.get("/dashboard", isAuth, (req, res) => {
 // connect to MongoDB
 
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(config.mongodbUri)
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -71,6 +72,6 @@ mongoose
 
 // start server
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(config.port, () => {
+  console.log(`Server is running on port ${config.port}`);
 });
