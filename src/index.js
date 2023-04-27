@@ -7,6 +7,7 @@ require("dotenv").config();
 const githubAuth = require("./config/passport.config");
 const passport = require("passport");
 const isAuth = require("./middlewares/isAuth.midleware");
+const routes = require("./routes/routes");
 
 const app = express();
 const PORT = config.port;
@@ -38,26 +39,10 @@ app.use(passport.initialize());
 githubAuth();
 app.use(express.static("public"));
 app.use(express.json());
-app.use("/api", require("./routes/routes"));
 
 // routes
 
-app.get("/", (req, res) => {
-  res.render("main");
-});
-app.get("/register", (req, res) => {
-  res.render("register");
-});
-app.get("/login", (req, res) => {
-  if (req.user) {
-    res.redirect("/dashboard");
-  }
-  res.render("login");
-});
-
-app.get("/dashboard", isAuth, (req, res) => {
-  res.render("dashboard");
-});
+app.get("/", routes);
 
 // connect to MongoDB
 

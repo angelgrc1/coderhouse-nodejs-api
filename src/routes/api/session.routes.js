@@ -1,7 +1,7 @@
 const express = require("express");
 const passport = require("passport");
-const usersSchema = require("../models/users.schema");
-const { isValidPassword } = require("../utils/password");
+const usersSchema = require("../../models/users.schema");
+const { isValidPassword } = require("../../utils/password");
 
 const sessionRouter = express.Router();
 

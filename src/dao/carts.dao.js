@@ -1,93 +1,52 @@
-const { default: mongoose } = require("mongoose");
-const cartSchema = require("../models/carts.schema");
+const mongoose = require("mongoose");
 
-const createCart = (req, res) => {
-  const cart = cartSchema(req.body);
-  cart
-    .save()
-    .then((cart) => {
-      res.status(201).json(cart);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
+class CartDao {
+  constructor(collection, shema) {
+    this.cartCollection = mongoose.model(collection, shema);
+  }
+
+  async createCart() {
+    const cart = await this.cartCollection.create({});
+    return cart;
+  }
+
+  async getCartById(id) {
+    const cart = await this.cartCollection
+      .findById(id)
+      .populate("products.product")
+      .lean();
+    return cart;
+  }
+
+  async addProductToCart(cid, pid, quantity) {
+    const cart = await this.cartCollection.findOne({ _id: cid });
+    const productId = new mongoose.Types.ObjectId(pid);
+    const cartUpdated = await cart.updateOne({
+      $push: { products: { product: productId, quantity } },
     });
-};
+    return cartUpdated;
+  }
 
-const getCartById = (req, res) => {
-  const { id } = req.params;
-  cartSchema
-    .findById(id)
-    .populate("products.product")
-    .then((cart) => {
-      res.status(200).json(cart);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
-    });
-};
-
-const addProductToCart = (req, res) => {
-  const { cid, pid } = req.params;
-  const { quantity } = req.body;
-  const cart = cartSchema.findOne({ _id: cid });
-  const productId = new mongoose.Types.ObjectId(pid);
-  cart
-    .updateOne({ $push: { products: { product: productId, quantity } } })
-    .then((cart) => {
-      res.status(200).json(cart);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
-    });
-};
-
-const updateProductQuantityInCart = (req, res) => {
-  const { cid, pid } = req.params;
-  const { quantity } = req.body;
-  cartSchema
-    .updateOne(
+  async updateProductQuantityInCart(cid, pid, quantity) {
+    const cart = await this.cartCollection.updateOne(
       { _id: cid, "products.product": pid },
       { $set: { "products.$.quantity": quantity } }
-    )
-    .then((cart) => {
-      res.status(200).json(cart);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
-    });
-};
+    );
+    return cart;
+  }
 
-const deleteProductFromCart = (req, res) => {
-  const { cid, pid } = req.params;
-  const cart = cartSchema.findOne({ _id: cid });
-  const productId = new mongoose.Types.ObjectId(pid);
-  cart
-    .updateOne({ $pull: { products: { product: productId } } })
-    .then((cart) => {
-      res.status(200).json(cart);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
+  async deleteProductFromCart(cid, pid) {
+    const cart = await this.cartCollection.findOne({ _id: cid });
+    const cartUpdated = await cart.updateOne({
+      $pull: { products: { product: pid } },
     });
-};
+    return cartUpdated;
+  }
 
-const deleteCart = (req, res) => {
-  const { id } = req.params;
-  cartSchema
-    .deleteOne({ _id: id })
-    .then((cart) => {
-      res.status(200).json(cart);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
-    });
-};
+  async deleteCartById(id) {
+    const cart = await this.cartCollection.deleteOne({ _id: id });
+    return cart;
+  }
+}
 
-module.exports = {
-  createCart,
-  getCartById,
-  addProductToCart,
-  updateProductQuantityInCart,
-  deleteProductFromCart,
-  deleteCart,
-};
+module.exports = CartDao;
