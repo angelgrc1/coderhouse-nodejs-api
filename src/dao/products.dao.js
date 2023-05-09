@@ -1,80 +1,53 @@
-const productSchema = require("../models/products.schema");
+const mongoose = require("mongoose");
+const ProductDto = require("./dto/product.dto");
 
-// create a new product
-const createProduct = async (req, res) => {
-  const product = productSchema(req.body);
-  product
-    .save()
-    .then((product) => {
-      res.status(201).json(product);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
-    });
-};
+class ProductDao {
+  constructor(collection, schema) {
+    this.productCollection = mongoose.model(collection, schema);
+  }
 
-// get all products or get products by category
-const getAllProducts = async (req, res) => {
-  const { page, limit, category, sort } = req.query;
-  const query = category ? { category: category } : {};
-  productSchema
-    .paginate(query, {
+  async createProduct(product) {
+    const { title, description, price, stock, category, image } = product;
+    const newProduct = new ProductDto(
+      title,
+      description,
+      price,
+      stock,
+      category,
+      image
+    );
+    const result = await this.productCollection.create(newProduct);
+    return result;
+  }
+
+  async getAllProducts(page, limit, category, sort) {
+    const query = category ? { category: category } : {};
+    const result = await this.productCollection.paginate(query, {
       page: page || 1,
       limit: limit || 10,
       sort: { price: sort || 1 },
-    })
-    .then((product) => {
-      res.status(200).json(product);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
     });
-};
+    return result;
+  }
 
-// get a product by id
-const getProductById = async (req, res) => {
-  const { id } = req.params;
-  productSchema
-    .findById(id)
-    .then((product) => {
-      res.status(200).json(product);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
-    });
-};
+  async getProductById(id) {
+    const result = await this.productCollection.findById(id);
+    return result;
+  }
 
-// update a product
-const updateProduct = async (req, res) => {
-  const { id } = req.params;
-  const { name, price, description } = req.body;
-  productSchema
-    .updateOne({ _id: id }, { $set: { name, price, description } })
-    .then((product) => {
-      res.status(200).json(product);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
-    });
-};
+  async updateProduct(id, product) {
+    const { title, description, price, stock, category, image } = product;
+    const result = await this.productCollection.updateOne(
+      { _id: id },
+      { $set: { title, description, price, stock, category, image } }
+    );
+    return result;
+  }
 
-// delete a product
-const deleteProduct = async (req, res) => {
-  const { id } = req.params;
-  productSchema
-    .deleteOne({ _id: id })
-    .then((product) => {
-      res.status(200).json(product);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
-    });
-};
+  async deleteProductById(id) {
+    const result = await this.productCollection.deleteOne({ _id: id });
+    return result;
+  }
+}
 
-module.exports = {
-  createProduct,
-  getAllProducts,
-  getProductById,
-  updateProduct,
-  deleteProduct,
-};
+module.exports = ProductDao;
