@@ -9,6 +9,7 @@ const passport = require("passport");
 const isAuth = require("./middlewares/isAuth.midleware");
 const routes = require("./routes/routes");
 const errorHandler = require("./middlewares/errorHandler.middleware");
+const { addLogger } = require("./utils/logger");
 
 const app = express();
 const PORT = config.port;
@@ -40,6 +41,7 @@ app.use(passport.initialize());
 githubAuth();
 app.use(express.static("public"));
 app.use(express.json());
+app.use(addLogger);
 app.use(errorHandler);
 
 // routes
